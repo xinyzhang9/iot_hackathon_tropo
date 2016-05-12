@@ -7,19 +7,22 @@ var clientSecret = 'afef7e827b6a445abf5707767900ad0b'; // API key from Azure mar
 
 var str = 'This is a cool demo to call Microsoft text to speach service in Node.js.';
 
-var langs = ['es-ES','zh-CN','de-DE'];
+var langs = ['fr-FR','es-ES','zh-CN','de-DE'];
 
 var finalRes = [];
 
-console.log('Converting from text -> speech -> text.');
-console.log('Input text: "' + str + '"');
+var audiofile = 'helloworld.wav';
 
+//run
+translate(audiofile);
+
+function translate(audiofile){
 getAccessToken(clientId, clientSecret, function(err, accessToken) {
   if(err) return console.log(err);
   console.log('Got access token: ' + accessToken)
 
 
-  speechToText('houyan.wav', accessToken, langs[0], function(err, res) {
+  speechToText(audiofile, accessToken, langs[0], function(err, res) {
       // var x = i;
       if(err) return console.log(err);
       var newObj = {'Confidence' : res.results[0].confidence,
@@ -34,7 +37,7 @@ getAccessToken(clientId, clientSecret, function(err, accessToken) {
         
     });
 
-  speechToText('houyan.wav', accessToken, langs[1], function(err, res) {
+  speechToText(audiofile, accessToken, langs[1], function(err, res) {
       // var x = i;
       if(err) return console.log(err);
       var newObj = {'Confidence' : res.results[0].confidence,
@@ -49,7 +52,7 @@ getAccessToken(clientId, clientSecret, function(err, accessToken) {
         
     });
 
-  speechToText('houyan.wav', accessToken, langs[2], function(err, res) {
+  speechToText(audiofile, accessToken, langs[2], function(err, res) {
       // var x = i;
       if(err) return console.log(err);
       var newObj = {'Confidence' : res.results[0].confidence,
@@ -64,9 +67,24 @@ getAccessToken(clientId, clientSecret, function(err, accessToken) {
         
     });
 
+  speechToText(audiofile, accessToken, langs[3], function(err, res) {
+      // var x = i;
+      if(err) return console.log(err);
+      var newObj = {'Confidence' : res.results[0].confidence,
+                    'Content' : res.results[0].lexical,
+                    'lang' : langs[3],
+                   };
+      finalRes.push(newObj);
+      // console.log('Confidence ' + res.results[0].confidence + ' for: "' + res.results[0].lexical + '"');
+      if(finalRes.length === langs.length){
+        console.log(finalRes);
+      }
+        
+    });
 
-  
 })
+
+}//function translate
 // ==== Helpers ====
 
 function getAccessToken(clientId, clientSecret, callback) {
