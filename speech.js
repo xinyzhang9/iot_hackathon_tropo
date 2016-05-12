@@ -1,22 +1,24 @@
-var fs = require('fs');
-var util = require('util');
-var request = require('request');
+var speech = function(audiofile){
+  var fs = require('fs');
+  var util = require('util');
+  var request = require('request');
+  var lan = "en-US";
 
-var clientId = 'app_xinyzhang9';                             // Can be anything
-var clientSecret = 'afef7e827b6a445abf5707767900ad0b'; // API key from Azure marketplace
+  
+  var clientId = 'mylingual';
+  var clientSecret = '1a28544eeb2848868bdadaf2a153450e'; //TM
 
-var str = 'This is a cool demo to call Microsoft text to speach service in Node.js.';
+  //var clientId = 'app_xinyzhang9';                             // Can be anything
+ //var clientSecret = 'afef7e827b6a445abf5707767900ad0b'; // API key from Azure marketplace
 
-var langs = ['fr-FR','es-ES','zh-CN','de-DE'];
+  var str = 'This is a cool demo to call Microsoft text to speach service in Node.js.';
 
-var finalRes = [];
+  var langs = ['en-US','es-ES','zh-CN','ru-RU'];
 
-var audiofile = 'helloworld.wav';
+  var finalRes = [];
 
-//run
-translate(audiofile);
+  // var audiofile = 'houyan.wav';
 
-function translate(audiofile){
 getAccessToken(clientId, clientSecret, function(err, accessToken) {
   if(err) return console.log(err);
   console.log('Got access token: ' + accessToken)
@@ -33,6 +35,17 @@ getAccessToken(clientId, clientSecret, function(err, accessToken) {
       // console.log('Confidence ' + res.results[0].confidence + ' for: "' + res.results[0].lexical + '"');
       if(finalRes.length === langs.length){
         console.log(finalRes);
+        console.log("The language is most likely to be "+ getBestLan(finalRes));
+        lan = getBestLan(finalRes);
+        request.post({
+          headers: {'content-type' : 'application/x-www-form-urlencoded'},
+          url: "http://104.236.191.100/",
+          body: "language is " +  lan,
+        } , function(err, res) {
+            console.log("Thanks");
+        });
+        //res.render('res',{lan:lan});
+        
       }
         
     });
@@ -48,6 +61,17 @@ getAccessToken(clientId, clientSecret, function(err, accessToken) {
       // console.log('Confidence ' + res.results[0].confidence + ' for: "' + res.results[0].lexical + '"');
       if(finalRes.length === langs.length){
         console.log(finalRes);
+        console.log("The language is most likely to be "+getBestLan(finalRes));
+        lan = getBestLan(finalRes);
+        request.post({
+          headers: {'content-type' : 'application/x-www-form-urlencoded'},
+          url: "http://104.236.191.100/",
+          body: "language is " +  lan,
+        } , function(err, res) {
+            console.log("Thanks");
+        });
+        //res.render('res',{lan:lan});
+
       }
         
     });
@@ -63,6 +87,17 @@ getAccessToken(clientId, clientSecret, function(err, accessToken) {
       // console.log('Confidence ' + res.results[0].confidence + ' for: "' + res.results[0].lexical + '"');
       if(finalRes.length === langs.length){
         console.log(finalRes);
+        console.log("The language is most likely to be "+getBestLan(finalRes));
+        lan = getBestLan(finalRes);
+        request.post({
+          headers: {'content-type' : 'application/x-www-form-urlencoded'},
+          url: "http://104.236.191.100/",
+          body: "language is " +  lan,
+        } , function(err, res) {
+            console.log("Thanks");
+        });
+        //res.render('res',{lan:lan});
+
       }
         
     });
@@ -78,14 +113,67 @@ getAccessToken(clientId, clientSecret, function(err, accessToken) {
       // console.log('Confidence ' + res.results[0].confidence + ' for: "' + res.results[0].lexical + '"');
       if(finalRes.length === langs.length){
         console.log(finalRes);
+        console.log("The language is most likely to be "+getBestLan(finalRes));
+        lan = getBestLan(finalRes);
+        request.post({
+          headers: {'content-type' : 'application/x-www-form-urlencoded'},
+          url: "http://104.236.191.100/",
+          body: "language is" +  lan,
+        } , function(err, res) {
+            console.log("Thanks");
+        });
+        //res.render('res',{lan:lan});
+
       }
         
     });
 
+  // speechToText(audiofile, accessToken, langs[4], function(err, res) {
+  //     // var x = i;
+  //     if(err) return console.log(err);
+  //     var newObj = {'Confidence' : res.results[0].confidence,
+  //                   'Content' : res.results[0].lexical,
+  //                   'lang' : langs[4],
+  //                  };
+  //     finalRes.push(newObj);
+  //     // console.log('Confidence ' + res.results[0].confidence + ' for: "' + res.results[0].lexical + '"');
+  //     if(finalRes.length === langs.length){
+  //       console.log(finalRes);
+  //       console.log("The language is most likely to be "+getBestLan(finalRes));
+  //       lan = getBestLan(finalRes);
+
+  //       request.post({
+  //         headers: {'content-type' : 'application/x-www-form-urlencoded'},
+  //         url: "http://104.236.191.100/",
+  //         body: "language is " +  lan,
+  //       } , function(err, res) {
+  //           console.log("Thanks");
+  //       });
+
+  //       //return lan;
+  //       //res.render('res',{lan:lan});
+
+  //     }
+        
+  //   });
+
 })
 
-}//function translate
-// ==== Helpers ====
+function getBestLan(obj){
+  var best = null;
+  var max = 0;
+  for(var i in obj){
+    var  val = parseInt(obj[i].Confidence*100);
+    //console.log(val);
+    if( val > max){
+      max = val;
+      best = obj[i].lang;
+      //console.log(max);
+
+    }
+  }
+  return best;
+}
 
 function getAccessToken(clientId, clientSecret, callback) {
   request.post({
@@ -164,4 +252,9 @@ function speechToText(filename, accessToken, lang, callback) {
     });
   });
 }
+
+}//function translate
+// ==== Helpers ====
+
+module.exports = speech;
 

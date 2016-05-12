@@ -1,27 +1,48 @@
+var speech = require("./speech");
+
 var http = require('http');
 var tropowebapi = require('tropo-webapi');
+require('tropo-webapi/lib/tropo-session');
+var util = require('util');
+
+
 
 var express = require('express');
 var app = express();
 var sys = require('util');
 var bodyParser = require('body-parser');
+var path = require('path');
 
 app.use(bodyParser.urlencoded({'extended' : 'true'}));
 app.use(bodyParser.json());
 
+app.set('views',path.join(__dirname,'./views'));
+app.set('view engine','ejs');
 
 var multer  = require('multer');
 
-// var busboy = require('connect-busboy');
+var language = 'TBD';
 
-var multiparty = require('multiparty')
-  , http = require('http')
-  , util = require('util')
+//var lan = 'en-US';
+
+var storage = multer.diskStorage({
+	destination: './',
+	filename: function(req, res, cb){
+	   cb(null, stringGen(4) + '.wav');
+	}
+});
+
+function stringGen(len)
+{
+ var text = "";
+ var charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+ for( var i=0; i < len; i++ )
+   text += charset.charAt(Math.floor(Math.random() * charset.length));
+ return text;
+}
 
 
- var upload = multer({dest : 'upload/'});
-
- var type = upload.single('filename');
+var type = multer({ storage: storage }).single('filename');
 
 // var server = http.createServer(function (request, response) {
     
@@ -78,10 +99,44 @@ var multiparty = require('multiparty')
 
 // }).listen(80); // Listen on port 80 for requests.
 
+app.get("/result", function(req,res){
+
+	res.render('result',{ens: language});
+
+});
+
+
 app.post('/', function(req, res){
     // Create a new instance of the TropoWebAPI object.
-    console.log("post");
+    console.log("HERE!");
+    console.log(req.body);
+
+    language = JSON.stringify(req.body);
+
+
+    var token = '7973744178676e525276655149704e51536a5873704b674f565757474d41746e64556b706a554a7667437a66';
+
+    var params = {
+   'src': '16622695772', // Sender's phone number with country code
+   'dst' : '+12177214157', // Receiver's phone Number with country code
+   'text' : "Thanks for your query. Your language identified is " + language, // Your SMS Text Message - English
+   //'text' : "こんにちは、元気ですか？", // Your SMS Text Message - Japanese
+   //'text' : "Ce est texte généré aléatoirement", // Your SMS Text Message - French
+   //'url' : "http://example.com/report/", // The URL to which with the status of the message is sent
+   'method' : "GET" // The method used to call the url
+	};
+
+	// Prints the complete response
+	p.send_message(params, function (status, response) {
+	   console.log('Status: ', status);
+	   console.log('API Response:\n', response);
+	   console.log('Message UUID:\n', response['message_uuid']);
+	   console.log('Api ID:\n', response['api_id']);
+	});
+
     //var tropo = new tropowebapi.TropoWebAPI();
+
+    //console.log(req.body);
     // if(req.body['session']['from']['channel'] == "TEXT") {
     // 	console.log("if");
     //     tropo.say("This application is voice only.  Please call in using a regular phone or SIP phone.");
@@ -91,33 +146,28 @@ app.post('/', function(req, res){
     //     res.send(TropoJSON(tropo));
     // }    // Use the say method https://www.tropo.com/docs/webapi/say.htm
     // else {
-    	console.log("else");
+//    	console.log("else");
 
-    //tropo.say("Welcome to my Tropo Web API node demo.");
-    
-    //var say = new Say("Please ree cord your message after the beep.");
-    //var choices = new Choices(null, null, "#");
-
-    // tropo.record(3, false, null, choices, "audio/wav", 5, 60, null, null, "recording", null, say, 5, null, "http://104.236.191.100/", "enjoy123", "root");
-    // tropo.record(3, false, null, choices, null, 5, 60, null, null, "recording", null, say, 5, null, "ftp://104.236.191.100/test.wav", "enjoy123", "root");
-    //tropo.say("helloworld.wav");
-
-    // // use the on method https://www.tropo.com/docs/webapi/on.htm
-    // tropo.on("continue", null, "/answer", true);
-
-    // tropo.on("incomplete", null, "/timeout", true);
-    
-    // tropo.on("error", null, "/error", true);
-
-    //res.send(TropoJSON(tropo));
-    console.log(req.body);
+    res.render('result',{ens : language});
+    //console.log(req.body);
 //}
 });
 
 
 app.post('/record', type, function(req,res) {
+	console.log(req.body);
 
-console.log(req.file);
+	console.log(req.file);
+	var filename = req.file.filename;
+	//call translate
+	setTimeout(function(){speech(filename)},2000);
+
+	
+	// var tropo = new TropoWebAPI();
+
+	// tropo.say("Your language is english");
+
+	// res.send(TropoJSON(tropo));	
 
 });
 
@@ -136,6 +186,13 @@ console.log(req.file);
 
 //     });
 // });
+
+var plivo = require('plivo');
+var p = plivo.RestAPI({
+ authId: 'MAYZJINJK1YJJJZMFMMZ',
+ authToken: 'YmU2YzQ3ZDZkMjhjYTFmMjRkYmEwNDQ3OWM0NmVj'
+});
+
 
 app.post('/answer', function(req, res){
     // Create a new instance of the TropoWebAPI object.
@@ -160,13 +217,10 @@ app.post('/error', function(req, res){
     res.send(TropoJSON(tropo));
 });
 
-// app.post('/record',function(req,res){
-// 	console.log("thanks post");
-// 	console.log(req.body);
-// });
+app.get('/',function(req,res){
+	res.render('index');
+})
 
-app.get('/record',function(req,res){
-	console.log("thanks get");
-});
+
 
 app.listen(80);
