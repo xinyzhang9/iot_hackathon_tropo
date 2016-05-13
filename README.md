@@ -23,3 +23,6 @@ We built a public hotline service using Cisco Tropo API, which records user's sp
     "tropo-webapi": "^1.2.0",  
     "websocket": "^1.0.22"  
 
+## Presentation of some results
+![alt tag](https://raw.githubusercontent.com/xinyzhang9/iot_hackathon_tropo/master/screenshot.png)
+
