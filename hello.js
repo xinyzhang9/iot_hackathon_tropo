@@ -114,7 +114,7 @@ app.post('/', function(req, res){
     language = JSON.stringify(req.body);
 
 
-    var token = '7973744178676e525276655149704e51536a5873704b674f565757474d41746e64556b706a554a7667437a66';
+    var token = 'your-token';
 
     var params = {
    'src': '16622695772', // Sender's phone number with country code
@@ -172,25 +172,11 @@ app.post('/record', type, function(req,res) {
 });
 
 
-// app.post('/record',function(req,res){
-// 	console.log("here");
-//     // parse a file upload
-//     var form = new multiparty.Form();
-
-//     form.parse(req, function(err, fields, files) {
-//     	console.log(files);
-//       res.writeHead(200, {'content-type': 'text/plain'});
-//       res.write('received upload:\n\n');
-//       res.end(util.inspect({fields: fields, files: files}));
-//       console.log("success");
-
-//     });
-// });
 
 var plivo = require('plivo');
 var p = plivo.RestAPI({
- authId: 'MAYZJINJK1YJJJZMFMMZ',
- authToken: 'YmU2YzQ3ZDZkMjhjYTFmMjRkYmEwNDQ3OWM0NmVj'
+ authId: 'your-plivo-id',
+ authToken: 'your-plivo-token'
 });
 
 

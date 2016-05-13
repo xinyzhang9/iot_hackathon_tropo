@@ -5,8 +5,8 @@ var speech = function(audiofile){
   var lan = "en-US";
 
   
-  var clientId = 'mylingual';
-  var clientSecret = '1a28544eeb2848868bdadaf2a153450e'; //TM
+  var clientId = 'your-app-id';
+  var clientSecret = 'your-clientSecret'; //TM
 
   //var clientId = 'app_xinyzhang9';                             // Can be anything
  //var clientSecret = 'afef7e827b6a445abf5707767900ad0b'; // API key from Azure marketplace
