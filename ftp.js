@@ -7,8 +7,8 @@ var c = new Client();
 
 var connectionProperties = {
     host: "ftp://ftp.tropo.com/www/audio",
-    user: "xinyzhang9@gmail.com",
-    password: "Lynnzxy31415@",
+    user: "abc@example.com",
+    password: "your-password",
 };
 
 c.on('ready', function () {
