@@ -117,8 +117,8 @@ app.post('/', function(req, res){
     var token = 'your-token';
 
     var params = {
-   'src': '16622695772', // Sender's phone number with country code
-   'dst' : '+12177214157', // Receiver's phone Number with country code
+   'src': '12345678', // Sender's phone number with country code
+   'dst' : '+198765432', // Receiver's phone Number with country code
    'text' : "Thanks for your query. Your language identified is " + language, // Your SMS Text Message - English
    //'text' : "こんにちは、元気ですか？", // Your SMS Text Message - Japanese
    //'text' : "Ce est texte généré aléatoirement", // Your SMS Text Message - French
