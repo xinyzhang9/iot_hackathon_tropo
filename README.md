@@ -24,5 +24,6 @@ We built a public hotline service using Cisco Tropo API, which records user's sp
     "websocket": "^1.0.22"  
 
 ## Presentation of some results
+I called the hotline and it detected my language is Chinese.  
 ![alt tag](https://raw.githubusercontent.com/xinyzhang9/iot_hackathon_tropo/master/screenshot.png)
 
